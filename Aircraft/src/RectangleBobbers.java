@@ -1,22 +1,22 @@
 import java.awt.*;
-import java.util.Objects;
 
-public class Bobber {
-    private CountBobber count;
+public class RectangleBobbers implements IAdditional {
+    private AdditionalEnumBobbers addEnumBobbers;
+    public int countMotors;
 
-    public void setCount(int count) {
-        this.count = CountBobber.getCount(count);
+    public RectangleBobbers(int CountBobbers) {
+        setCountBobbers( CountBobbers );
     }
 
-    public Bobber(int count) {
-        setCount(count);
+    @Override
+    public void setCountBobbers(int countBobbers) {
+        addEnumBobbers = AdditionalEnumBobbers.countEnumBobbers( countBobbers );
     }
 
-    public void draw(Graphics g, Color color, int x, int y) {
-
-        switch (Objects.requireNonNull(count)) {
-            case six: {
-                g.setColor(color);
+    public void drawBobbers(Graphics g, Color dopColor, int x, int y) {
+        switch (addEnumBobbers) {
+            case sixBobbers: {
+                g.setColor(dopColor);
                 g.fillRect(x + 45, y + 35, 50, 9);
                 g.fillRect(x + 45, y + 66, 50, 9);
                 g.setColor(Color.black);
@@ -29,8 +29,8 @@ public class Bobber {
                 g.drawLine(x + 95, y + 66, x + 80, y + 71);
                 g.drawLine(x + 95, y + 76, x + 80, y + 71);
             }
-            case four: {
-                g.setColor(color);
+            case fourBobbers: {
+                g.setColor(dopColor);
                 g.fillRect(x + 45, y + 5, 50, 9);
                 g.fillRect(x + 45, y + 80, 50, 9);
                 g.setColor(Color.black);
@@ -43,8 +43,8 @@ public class Bobber {
                 g.drawLine(x + 95, y + 80, x + 80, y +85 );
                 g.drawLine(x + 95, y + 89, x + 80, y + 85);
             }
-            case two: {
-                g.setColor(color);
+            case twoBobbers: {
+                g.setColor(dopColor);
                 g.fillRect(x + 45, y + 20, 50, 9);
                 g.fillRect(x + 45, y + 95, 50, 9);
                 g.setColor(Color.black);
@@ -56,8 +56,6 @@ public class Bobber {
                 g.drawLine(x + 45, y + 104, x + 60, y + 99);
                 g.drawLine(x + 95, y + 95, x + 80, y +99);
                 g.drawLine(x + 95, y + 104, x + 80, y + 99);
-                g.setColor(color);
-
             }
         }
     }

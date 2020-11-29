@@ -1,91 +1,155 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Random;
 
-public class FrameAircraft extends JFrame {
+public class FrameAircraft{
+    private JFrame frame;
+    DrawPanelAircraft aircraftPanel;
+    Aircraft aircraft;
+    final Random random = new Random();
+    JButton btnLeft;
+    JButton btnRigth;
+    JButton btnUp;
+    JButton btnDown;
+    JButton btnCreate;
+    Direction direction;
+    JLabel lblCountBobbers;
+    private int countBobbers;
+    private int typeBobbers;
+    JLabel lblTypeBobbers;
+    JButton btnSeaPlane;
 
-    private JPanel contentPane;
-    private final JFrame frame;
-    private DrawPanelAircraft drawPanelAircraft;
-    private JComboBox<String> list;
+    public static void main(String[] args) {
+        EventQueue.invokeLater( new Runnable() {
+            public void run() {
+                try {
+                    FrameAircraft window = new FrameAircraft();
+                    window.frame.setVisible( true );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } );
+    }
 
     public FrameAircraft() {
-        frame = new JFrame("Самолет");
-        frame.setSize(900, 500);
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.setVisible(true);
-        frame.setResizable(false);
-
-        Icon up = new ImageIcon("верх.jpg");
-        Icon down = new ImageIcon("низ.jpg");
-        Icon left = new ImageIcon("лево.jpg");
-        Icon right = new ImageIcon("право.jpg");
-
-        JButton btnCreate = new JButton("Создать");
-        JButton btnUp = new JButton(up);
-        btnUp.setName("Up");
-        JButton btnDown = new JButton(down);
-        btnDown.setName("Down");
-        JButton btnLeft = new JButton(left);
-        btnLeft.setName("Left");
-        JButton btnRight = new JButton(right);
-        btnRight.setName("Right");
-
-        frame.getContentPane().add(btnCreate);
-        frame.getContentPane().add(btnUp);
-        frame.getContentPane().add(btnDown);
-        frame.getContentPane().add(btnLeft);
-        frame.getContentPane().add(btnRight);
-
-        btnCreate.setBounds(10, 10, 90, 30);
-        btnUp.setBounds(805, 375, 30, 30);
-        btnDown.setBounds(805, 410, 30, 30);
-        btnLeft.setBounds(770, 410, 30, 30);
-        btnRight.setBounds(840, 410, 30, 30);
-
-        btnCreate.addActionListener(e -> setAircraft());
-        btnUp.addActionListener(e -> setDirection(btnUp));
-        btnDown.addActionListener(e -> setDirection(btnDown));
-        btnLeft.addActionListener(e -> setDirection(btnLeft));
-        btnRight.addActionListener(e -> setDirection(btnRight));
-
-        list = new JComboBox<>(new String[] { "2 поплавка", "4 поплавка", "6 поплавков" });
-        frame.getContentPane().add(list);
-        list.setBounds(10, 45, 90, 30);
+        initialize();
     }
 
-    public void addDrawPanel(DrawPanelAircraft panel) {
-        drawPanelAircraft = panel;
-        frame.getContentPane().add(drawPanelAircraft);
-        drawPanelAircraft.setBounds(0, 0, 900, 500);
-        frame.repaint();
+    private void initialize() {
+        frame = new JFrame();
+        frame.setBounds( 100, 100, 900, 600 );
+        frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+        frame.getContentPane().setLayout( null );
+
+        aircraftPanel = new DrawPanelAircraft(aircraft);
+        aircraftPanel.setBounds( 0, 0, 650, 600 );
+        frame.getContentPane().add(aircraftPanel );
+
+        btnUp = new JButton( "" );
+        btnUp.addActionListener( new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                aircraft.MoveTransport( Direction.Up );
+                aircraftPanel.repaint();
+            }
+        } );
+        btnUp.setIcon( new ImageIcon( "верх.jpg" ) );
+        btnUp.setBounds( 690, 350, 35, 35 );
+        frame.getContentPane().add( btnUp );
+
+        btnDown = new JButton( "" );
+        btnDown.setIcon( new ImageIcon(
+                "низ.jpg" ) );
+        btnDown.addActionListener( new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                aircraft.MoveTransport( Direction.Down );
+                aircraftPanel.repaint();
+            }
+        } );
+        btnDown.setBounds( 690, 390, 35, 35 );
+        frame.getContentPane().add( btnDown );
+
+        btnRigth = new JButton( "" );
+        btnRigth.setIcon( new ImageIcon(
+                "право.jpg" ) );
+        btnRigth.addActionListener( new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                aircraft.MoveTransport( Direction.Right );
+                aircraftPanel.repaint();
+            }
+        } );
+        btnRigth.setBounds( 730, 390, 35, 35 );
+        frame.getContentPane().add( btnRigth );
+
+        btnLeft = new JButton( "" );
+        btnLeft.addActionListener( new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                aircraft.MoveTransport( Direction.Left );
+                aircraftPanel.repaint();
+            }
+        } );
+        btnLeft.setIcon( new ImageIcon(
+                "лево.jpg" ) );
+        btnLeft.setBounds( 650, 390, 35, 35 );
+        frame.getContentPane().add( btnLeft );
+
+        btnCreate = new JButton( "Создать самолет" );
+        btnCreate.addActionListener( new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                aircraft = new Aircraft( random.nextInt( 300 ), random.nextInt( 1000 ), Color.GREEN );
+                aircraftPanel.setAircraft( aircraft );
+                aircraft.SetPosition( random.nextInt( 200 ), random.nextInt( 200 ),
+                        aircraftPanel.getWidth(), aircraftPanel.getHeight() );
+                lblTypeBobbers.setText( "Тип поплавков:- " );
+                lblCountBobbers.setText( "Кол-во поплавков:- " );
+
+                aircraftPanel.repaint();
+            }
+        } );
+        btnCreate.setBounds( 666, 79, 156, 35 );
+        frame.getContentPane().add( btnCreate );
+
+        lblCountBobbers = new JLabel( "Кол-во поплавков: " );
+        lblCountBobbers.setBackground( new Color( 173, 216, 230 ) );
+        lblCountBobbers.setBounds( 660, 16, 176, 29 );
+        frame.getContentPane().add( lblCountBobbers);
+
+        lblTypeBobbers = new JLabel( "Тип поплавков:" );
+        lblTypeBobbers.setBounds( 660, 45, 191, 20 );
+        frame.getContentPane().add( lblTypeBobbers );
+
+        btnSeaPlane = new JButton( "Создать гидросамолет " );
+        btnSeaPlane.addActionListener( new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                typeBobbers = random.nextInt( 3 ) +1;
+                countBobbers = random.nextInt( 3 ) +1;
+                countBobbers=countBobbers*2;
+                aircraft = new SeaPlane( 100, 1000, Color.BLUE, Color.RED, true, true, true, typeBobbers, countBobbers );
+                aircraftPanel.setAircraft( aircraft );
+                aircraft.SetPosition( random.nextInt( 200 ), random.nextInt( 200 ),
+                        aircraftPanel.getWidth(), aircraftPanel.getHeight() );
+                lblCountBobbers.setText( "Кол-во поплавков: " + countBobbers );
+                lblTypeBobbersIn( typeBobbers );
+                aircraftPanel.repaint();
+            }
+        } );
+        btnSeaPlane.setBounds( 660, 145, 156, 35 );
+        frame.getContentPane().add( btnSeaPlane );
     }
 
-    private void setDirection(JButton button) {
-        String name = button.getName();
-        switch (name) {
-            case "Up":
-                drawPanelAircraft.getSeaPlane().moveTransport(Direction.Up);
-                break;
-            case "Down":
-                drawPanelAircraft.getSeaPlane().moveTransport(Direction.Down);
-                break;
-            case "Left":
-                drawPanelAircraft.getSeaPlane().moveTransport(Direction.Left);
-                break;
-            case "Right":
-                drawPanelAircraft.getSeaPlane().moveTransport(Direction.Right);
-                break;
+    public void lblTypeBobbersIn(int typeBobbers) {
+        if (typeBobbers == 1) {
+            lblTypeBobbers.setText( "Тип поплавков: " + "овальный" );
         }
-        frame.repaint();
+        if (typeBobbers == 2) {
+            lblTypeBobbers.setText( "Тип поплавков: " + "прямоугольный" );
+        }
+        if (typeBobbers== 3) {
+            lblTypeBobbers.setText( "Тип поплавков: " + "квадратный" );
+        }
     }
 
-    private void setAircraft() {
-        SeaPlane seaPlane = new SeaPlane(150, 1500, Color.BLUE, Color.green, true, list.getSelectedIndex() * 2 + 2);
-        drawPanelAircraft.setSeaPlane(seaPlane);
-        drawPanelAircraft.getSeaPlane().setPosition((int) (Math.random() * 100 + 10), (int) (Math.random() * 100 + 10),
-                850, 450);
-        frame.repaint();
-    }
 
 }
-
