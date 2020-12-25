@@ -127,14 +127,14 @@ public class FrameAircraft {
         frame.getContentPane().add( lblTypeBobbers );
     }
 
-    public void lblTypeMotorsIn(int typeMotors) {
-        if (typeMotors == 1) {
+    public void lblTypeBobbersIn(int typeBobbers) {
+        if (typeBobbers == 1) {
             lblTypeBobbers.setText( "Тип поплавков: " + "овальный" );
         }
-        if (typeMotors == 2) {
+        if (typeBobbers == 2) {
             lblTypeBobbers.setText( "Тип поплавков: " + "прямоугольный" );
         }
-        if (typeMotors == 3) {
+        if (typeBobbers== 3) {
             lblTypeBobbers.setText( "Тип поплавков: " + "квадратный" );
         }
     }
@@ -149,7 +149,7 @@ public class FrameAircraft {
                 aircraftPanel.getWidth(), aircraftPanel.getHeight() );
         aircraftPanel.setAircraft( aircraft);
         if (aircraft.getClass() == SeaPlane.class) {
-            lblTypeMotorsIn( ((SeaPlane) aircraft).getAddClass() );
+            lblTypeBobbersIn( ((SeaPlane) aircraft).getAddClass() );
             lblCountBobbers.setText( "Количество поплавков: " + ((SeaPlane) aircraft).getCountBobbers() );
         }
         aircraftPanel.repaint();
